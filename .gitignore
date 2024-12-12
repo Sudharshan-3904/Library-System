@@ -1,1 +1,4 @@
 __pycache__/*
+/Books.csv
+/UserData.csv
+/logs.log

@@ -10,8 +10,8 @@ class API:
     def __init__(self) -> None:
         self.__valid_credentials = []
         self.__credentials_filename = f"{os.path.dirname(os.path.realpath(__file__))}\\UserData.csv"
-        self.__log_filename = f"{os.path.dirname(os.path.realpath(__file__))}\\logs.txt"
-        self.__book_datafile = f"{os.path.dirname(os.path.realpath(__file__))}\\books.csv"
+        self.__log_filename = f"{os.path.dirname(os.path.realpath(__file__))}\\logs.log"
+        self.__book_datafile = f"{os.path.dirname(os.path.realpath(__file__))}\\Books.csv"
         self.__books_header = ["Title", "Author", "Publisher", "ISBN", "Status"]
         self.update_log()
         self.readCredentials()
