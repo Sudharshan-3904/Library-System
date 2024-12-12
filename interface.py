@@ -1,7 +1,3 @@
-#TODO - Add delete book records button only for admins
-#TODO - Add a way to resiter new user
-
-
 import customtkinter as ctk
 from CTkTable import *
 from CTkMessagebox import *
@@ -45,10 +41,11 @@ class Interface:
     def startApp(self,authorized=1, auth_level = "Admin"):
         if authorized==1:
             self.__LOGGED_IN = True
+            self.__root.mainloop()
             self.__current_user_auth_level = auth_level
             self.updateSection("Home")
             self.create_main_layout()
-            self.__root.mainloop()
+            self.__root.update()
         else:
             self.__LOGGED_IN = False
             self.updateSection("Login")
@@ -128,6 +125,13 @@ class Interface:
     def add_new_user(self):
         self.__api_obj.add_new_credentials(self.__add_user_un_str_var.get(), self.__add_user_pw_str_var.get(), self.__user_auth_str_var.get())
     
+    def register_user(self):
+        self.__api_obj.add_new_credentials(self.__add_user_un_str_var.get(), self.__add_user_pw_str_var.get(), "Admin")
+        self.__add_user_un_str_var.set("")
+        self.__add_user_pw_str_var.set("")
+        self.updateSection("Login")
+
+    
     def get_isbn_data(self) -> None:
         book_isbn_data = self.__api_obj.get_data_from_isbn(self.__book_isbn_str_var.get())
         self.__book_title_str_var.set(book_isbn_data["Title"])
@@ -171,19 +175,50 @@ class Interface:
                 self.__login_username_label = ctk.CTkLabel(master=self.__login_frame, text="Username")
                 self.__login_username_label.grid(row=1, column=0, rowspan=1, columnspan=2, padx=5, pady=2)                
                 self.__login_entry_username = ctk.CTkEntry(master=self.__login_frame, textvariable=self.__username_entry_str_var, placeholder_text="Username", placeholder_text_color="white")
-                self.__login_entry_username.grid(row=1, column=2, rowspan=1, columnspan=3, padx=5, pady=2)
+                self.__login_entry_username.grid(row=1, column=2, rowspan=1, columnspan=4, padx=5, pady=2)
                 
                 self.__login_password_label = ctk.CTkLabel(master=self.__login_frame, text="Password")
                 self.__login_password_label.grid(row=2, column=0, rowspan=1, columnspan=2, padx=5, pady=2)                
                 self.__login_entry_password = ctk.CTkEntry(master=self.__login_frame, textvariable=self.__password_entry_str_var, placeholder_text="Password", placeholder_text_color="white")
-                self.__login_entry_password.grid(row=2, column=2, rowspan=1, columnspan=3, padx=5, pady=2)
-                
+                self.__login_entry_password.grid(row=2, column=2, rowspan=1, columnspan=4, padx=5, pady=2)
+
+                self.__register_new_button_submit = ctk.CTkButton(master=self.__login_frame, text="Register", command=lambda: self.updateSection("Register"))
+                self.__register_new_button_submit.grid(row=3, column=0, rowspan=1, columnspan=2, padx=5, pady=2)
                 self.__login_button_submit = ctk.CTkButton(master=self.__login_frame, text="Login", command=self.check_credentials)
-                self.__login_button_submit.grid(row=3, column=0, rowspan=1, columnspan=2, padx=5, pady=2)                
+                self.__login_button_submit.grid(row=3, column=2, rowspan=1, columnspan=2, padx=5, pady=2)
                 self.__login_button_clear = ctk.CTkButton(master=self.__login_frame, text="Clear", command=self.clear_login_fields)
-                self.__login_button_clear.grid(row=3, column=2, rowspan=1, columnspan=2, padx=5, pady=2)
+                self.__login_button_clear.grid(row=3, column=5, rowspan=1, columnspan=1, padx=5, pady=2)
                 
                 self.__login_frame.pack()
+                self.__root.update()
+
+            case "Register":
+                if self.__LOGGED_IN:
+                    self.updateSection("Home")
+
+                clearFrame()
+
+                self.__register_frame = ctk.CTkFrame(master=self.__root)
+                
+                self.__register_info_label = ctk.CTkLabel(master=self.__register_frame, text="Enter Username and Password")
+                self.__register_info_label.grid(row=0, column=0, rowspan=1, columnspan=5, padx=5, pady=2)
+                
+                self.__register_username_label = ctk.CTkLabel(master=self.__register_frame, text="Username")
+                self.__register_username_label.grid(row=1, column=0, rowspan=1, columnspan=2, padx=5, pady=2)                
+                self.__register_entry_username = ctk.CTkEntry(master=self.__register_frame, textvariable=self.__add_user_un_str_var, placeholder_text="Username", placeholder_text_color="white")
+                self.__register_entry_username.grid(row=1, column=2, rowspan=1, columnspan=3, padx=5, pady=2)
+                
+                self.__register_password_label = ctk.CTkLabel(master=self.__register_frame, text="Password")
+                self.__register_password_label.grid(row=2, column=0, rowspan=1, columnspan=2, padx=5, pady=2)                
+                self.__register_entry_password = ctk.CTkEntry(master=self.__register_frame, textvariable=self.__add_user_pw_str_var, placeholder_text="Password", placeholder_text_color="white")
+                self.__register_entry_password.grid(row=2, column=2, rowspan=1, columnspan=3, padx=5, pady=2)
+
+                self.__register_button_submit = ctk.CTkButton(master=self.__register_frame, text="Register", command=self.register_user)
+                self.__register_button_submit.grid(row=3, column=0, rowspan=1, columnspan=2, padx=5, pady=2)
+                self.__register_button_clear = ctk.CTkButton(master=self.__register_frame, text="Clear", command=self.clear_login_fields)
+                self.__register_button_clear.grid(row=3, column=2, rowspan=1, columnspan=2, padx=5, pady=2)
+                
+                self.__register_frame.pack()
                 self.__root.update()
 
             case "Home":
@@ -360,8 +395,8 @@ class Interface:
                 self.__add_user_menu_auth_level = ctk.CTkOptionMenu(master=self.__add_user_frame, values=["Admin", "Librarian"], variable=self.__user_auth_str_var)
                 self.__add_user_menu_auth_level.grid(row=3, column=2, rowspan=1, columnspan=3, padx=5, pady=2)
 
-                self.__add_user_button_submit = ctk.CTkButton(master=self.__add_user_frame, text="Add User", command=self.add_new_user)
-                self.__add_user_button_submit.grid(row=4, column=0, rowspan=1, columnspan=2, padx=5, pady=2)                
+                self.__register_button_submit = ctk.CTkButton(master=self.__add_user_frame, text="Add User", command=self.add_new_user)
+                self.__register_button_submit.grid(row=4, column=0, rowspan=1, columnspan=2, padx=5, pady=2)                
                 self.__add_user_button_clear = ctk.CTkButton(master=self.__add_user_frame, text="Clear", command=self.clear_login_fields)
                 self.__add_user_button_clear.grid(row=4, column=2, rowspan=1, columnspan=2, padx=5, pady=2)
                 
