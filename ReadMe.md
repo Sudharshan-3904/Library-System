@@ -1,7 +1,3 @@
-To address your request and enrich the context of this project, I'll add a new section called "Features" in the ReadMe.md file.
-
-** Modified ReadMe.md content **
-
 # Project Overview
 
 =====================================
