@@ -1,6 +1,5 @@
 # Project Overview
 
----
 
 This project is a graphical user interface (GUI) application built using Python and the CTk library for creating modern and visually appealing interfaces. The code provides functionality for users to log in, view home section content, and update book data.
 
